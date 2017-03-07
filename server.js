@@ -17,7 +17,7 @@ app.get('/', function(req, res) {
 app.post('/', (req, res) => {
   let text = req.body.text;
   let data = { 
-    text: 'hello there?',
+    text: 'https://www.bbcgoodfood.com/search/recipes?query=Vegan+broccoli',
   };
   res.json(data);
 });
