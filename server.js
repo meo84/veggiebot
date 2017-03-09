@@ -1,4 +1,6 @@
 var express = require('express');
+var jsdom  = require('jsdom');
+
 var app = express();
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
@@ -26,7 +28,27 @@ app.post('/', (req, res) => {
     return;
   }
   let data = { 
-    text: 'https://www.bbcgoodfood.com/search/recipes?query=Vegan+' + ingredient
+    text: get_recipes(ingredient)
   };
   res.json(data);
 });
+
+function get_recipes(ingredient) {
+  var url = 'https://www.bbcgoodfood.com/search/recipes?query=Vegan+' + ingredient;
+
+  jsdom.env({
+    url: url,
+    scripts: ['http://code.jquery.com/jquery.js'],
+    done: function (err, window) {
+      var $ = window.$;
+      console.log("Test recipe title");
+      $(".teaser-item__image").children("a").each(function() {
+        console.log(" -", $(this).children("img").attr("alt"));
+        console.log("url:", "https://www.bbcgoodfood.com" + $(this).attr("href"));
+        console.log("recipe_picture:", "https:" + $(this).children("img").attr("src"));
+      });
+    }
+  });
+  return url;
+}
+
